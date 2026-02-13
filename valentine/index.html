@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Someone Special ❤️</title>
+    <style>
+        :root {
+            --primary-color: #ff4d6d;
+            --secondary-color: #ff8fa3;
+            --bg-color: #fff0f3;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg-color);
+            height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .heart {
+            position: absolute;
+            color: var(--primary-color);
+            font-size: 20px;
+            animation: fall linear infinite;
+            top: -10%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            z-index: 10;
+            width: 90%;
+            max-width: 380px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 12px;
+            margin: 15px 0;
+            outline: none;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .btn-enter, .btn-next { background: var(--primary-color); color: white; }
+        .btn-yes { background: #4caf50; color: white; width: 100px; }
+        .btn-no { background: #f44336; color: white; width: 100px; }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            position: relative;
+            height: 50px;
+            align-items: center;
+        }
+
+        .hidden { display: none; }
+
+        .img-container {
+            width: 100%;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .img-container img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+      .typing-text {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-height: 45px;
+            max-width: 100%;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            text-align: center;
+            overflow-wrap: anywhere;
+            word-break: normal;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <div id="login-screen" class="container">
+        <h2 style="color: var(--primary-color);">Your Full Name ?</h2>
+        <input type="text" id="userName" placeholder="Please Enter your full name...">
+        <button class="btn-enter" style="width:100%" onclick="checkName()">Enter</button>
+        <p id="error-msg" style="color: #f44336; margin-top: 10px; font-weight: bold;" class="hidden">
+            Sorry, this is not for you 🙂
+        </p>
+    </div>
+
+    <div id="welcome-card" class="container hidden">
+        <div id="welcome-msg" class="typing-text"></div>
+        <button class="btn-next" onclick="showProposal()">Click to Continue...✨</button>
+    </div>
+
+    <div id="proposal-card" class="container hidden">
+        <div class="img-container">
+            <img src="bear.jpeg" alt="Will you?">
+        </div>
+        <p style="font-size: 1.2rem; font-weight: bold;">
+            Hey Sweet Heart, Will you be my Valentine? ❤️
+        </p>
+        <div class="button-group">
+            <button class="btn-yes" onclick="showFinal()">Yes</button>
+            <button class="btn-no" id="noBtn"
+                onmouseover="moveNoButton()"
+                onclick="moveNoButton()"
+                ontouchstart="moveNoButton()">No</button>
+        </div>
+    </div>
+
+    <div id="final-card" class="container hidden">
+        <div class="img-container">
+            <img src="our.jpeg" alt="Our Special Moment">
+        </div>
+        <div id="final-msg" class="typing-text"></div>
+    </div>
+
+    <script>
+        const ALLOWED_NAMES = [
+            "miss sweta arnab malik",
+            "sweet heart"
+        ];
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        setInterval(createHeart, 400);
+
+        function checkName() {
+            const inputName = document.getElementById('userName').value.trim().toLowerCase();
+            if (ALLOWED_NAMES.includes(inputName)) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('welcome-card').classList.remove('hidden');
+                startTyping("Welcome...", "welcome-msg");
+            } else {
+                document.getElementById('error-msg').classList.remove('hidden');
+            }
+        }
+
+        function showProposal() {
+            document.getElementById('welcome-card').classList.add('hidden');
+            document.getElementById('proposal-card').classList.remove('hidden');
+        }
+
+        function startTyping(text, elementId) {
+            let i = 0;
+            const element = document.getElementById(elementId);
+            element.innerText = "";
+            function type() {
+                if (i < text.length) {
+                    element.innerText += text.charAt(i);
+                    i++;
+                    setTimeout(type, 80);
+                }
+            }
+            type();
+        }
+
+        function moveNoButton() {
+            const btn = document.getElementById('noBtn');
+            const msgs = [
+                "I think by mistake you hit the wrong button 😅",
+                "You can't say No! ❤️",
+                "Try again! 🤭",
+                "Nice try! 😅"
+            ];
+            btn.style.position = 'fixed';
+            btn.style.left = Math.random() * (window.innerWidth - 120) + 'px';
+            btn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+            btn.innerText = msgs[Math.floor(Math.random() * msgs.length)];
+        }
+
+        function showFinal() {
+            document.getElementById('proposal-card').classList.add('hidden');
+            document.getElementById('final-card').classList.remove('hidden');
+
+            startTyping(
+"You chose YES…\n" +
+"and I chose you 💞\n\n" +
+"Science says the human mind is active for the last 7 minutes to remember all good memories,\n" +
+"and I want to be your that last 7 minutes.\n\n" +
+"I love you my Sweet Heart 💖",
+            "final-msg"
+            );
+        }
+    </script>
+</body>
+</html>
